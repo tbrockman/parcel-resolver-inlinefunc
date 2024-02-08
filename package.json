@@ -1,0 +1,36 @@
+{
+  "name": "parcel-resolver-inlinefunc",
+  "version": "0.0.1",
+  "description": "Parcel resolver for compiling and inlining functions as IIFEs, which can be serialized and executed in different contexts",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "scripts": {
+    "prepublishOnly": "pnpm build",
+    "build": "tsup src/index.ts --minify --clean --dts",
+    "dev": "tsup src/index.ts --watch"
+  },
+  "author": "Theodore Brockman <iam@theo.lol>",
+  "homepage": "https://theo.lol",
+  "engines": {
+    "parcel": ">= 2.7.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tbrockman/parcel-resolver-inlinefunc.git"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.3",
+    "@types/node": "^20.11.16",
+    "tsup": "7.2.0",
+    "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "@parcel/node-resolver-core": "3.2.0",
+    "@parcel/plugin": "2.9.3",
+    "@parcel/types": "2.9.3",
+    "esbuild": "0.19.5"
+  }
+}
