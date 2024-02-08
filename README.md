@@ -6,21 +6,33 @@ This allows you to create a serializable function (bundling all necessary depend
 
 You can see a real example of this being used in [opentelemetry-browser-extension](https://github.com/tbrockman/opentelemetry-browser-extension).
 
+## Installation
+
+```bash
+pnpm i -D parcel-resolver-inlinefunc
+```
+
+```bash
+yarn add -D parcel-resolver-inlinefunc
+```
+
 ## Usage
 
 `background.js`:
 ```javascript
+// import a default function from a file
 import contentScript from 'inlinefunc:./content-script';
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     if (changeInfo.status === "complete") {
         chrome.scripting.executeScript({
+            // use the function as normal
             func: injectContentScript,
-            target: { tabId, allFrames: true },
             args: [
                 chrome.runtime.id,
                 // ...any other args
             ],
+            target: { tabId, allFrames: true },
             injectImmediately: true,
             world: "MAIN"
         })
@@ -33,7 +45,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 // An example dependency we'd want bundled with our function
 import { getQuickJS } from "quickjs-emscripten" // put a VM in your VM
 
-async function main(extensionId) {
+// IMPORTANT: function must be the default export
+export default async function main(extensionId) {
     const QuickJS = await getQuickJS()
     const vm = QuickJS.newContext()
 
@@ -52,14 +65,11 @@ async function main(extensionId) {
 
     vm.dispose()
 }
-
-// IMPORTANT: function must be the default export
-export default main
 ```
 
 ## Customization
 
-If you'd like to pass anything else to `esbuild` (see the [default parameters here](./src/index.ts#L73)), for example if your function requires any polyfills, you can do so by creating an `inlinefunc-config.mjs` file (or whatever you'd like to name it) which exports the top-level configuration options you'd like to override:
+If you'd like to pass anything else to `esbuild` (see the [default parameters here](./src/index.ts#L73)), for example if your function requires any polyfills, you can do so by creating an `inlinefunc.mjs` file (or whatever you'd like to name it) which exports the top-level configuration options you'd like to override:
 
 `package.json`
 ```json
@@ -70,12 +80,12 @@ If you'd like to pass anything else to `esbuild` (see the [default parameters he
   ...,
 
   "parcel-resolver-inlinefunc": {
-    "options": "inlinefunc-config.mjs"
+    "options": "inlinefunc.mjs"
   }
 }
 ```
 
-`inlinefunc-config.mjs`
+`inlinefunc.mjs`
 ```javascript
 import { polyfillNode } from "esbuild-plugin-polyfill-node";
 
@@ -89,3 +99,17 @@ export {
     plugins
 };
 ```
+
+## Troubleshooting
+
+### `✘ [ERROR] Could not resolve "*"`
+
+If you're using `pnpm` for your project and see this error, this can potentially be resolved by running the following:
+
+```bash
+pnpm install --shamefully-hoist
+```
+
+### `Uncaught TypeError: Failed to construct 'URL': Invalid URL`
+
+If you're attempting to use a library that imports WebAssembly (resulting in a call like `new URL("*.wasm", import_meta.url).href;`), this is currently unsupported, but likely fixable.

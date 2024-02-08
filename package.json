@@ -9,6 +9,7 @@
   "scripts": {
     "prepublishOnly": "pnpm build",
     "build": "tsup src/index.ts --minify --clean --dts",
+    "build:examples": "pnpm -C examples/content-script build",
     "dev": "tsup src/index.ts --watch"
   },
   "author": "Theodore Brockman <iam@theo.lol>",

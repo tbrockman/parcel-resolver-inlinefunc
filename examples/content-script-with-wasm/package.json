@@ -1,0 +1,26 @@
+{
+  "name": "content-script",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@sqlite.org/sqlite-wasm": "3.45.1-build1",
+    "parcel-resolver-inlinefunc": "link:..\\..",
+    "quickjs-emscripten": "^0.27.0"
+  },
+  "devDependencies": {
+    "@parcel/config-default": "^2.11.0",
+    "@types/chrome": "^0.0.260",
+    "esbuild-plugin-polyfill-node": "^0.3.0",
+    "parcel": "^2.11.0"
+  },
+  "parcel-resolver-inlinefunc": {
+    "options": "injectfunc.config.mjs"
+  }
+}

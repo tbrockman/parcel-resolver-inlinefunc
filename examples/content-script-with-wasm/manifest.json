@@ -1,0 +1,26 @@
+{
+    "name": "content-script-inlinefunc-example",
+    "version": "1.0",
+    "manifest_version": 3,
+    "background": {
+        "service_worker": "dist/index.js",
+        "type": "module"
+    },
+    "host_permissions": [
+        "https://*/*"
+    ],
+    "permissions": [
+        "tabs",
+        "scripting"
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "emscripten-module.wasm"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ]
+}

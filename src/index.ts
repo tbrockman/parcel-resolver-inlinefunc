@@ -84,7 +84,7 @@ export default new Resolver({
           js: 'module.exports = (...args) => {'
         },
         footer: {
-          js: '__plasmo_inlinefunc.default(...args); }'
+          js: 'await __plasmo_inlinefunc.default(...args); }'
         },
         globalName: '__plasmo_inlinefunc',
         preserveSymlinks: true,
