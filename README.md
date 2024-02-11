@@ -1,6 +1,6 @@
 # parcel-resolver-inlinefunc
 
-> ![WARNING]
+> [!WARNING]
 > This package is actively being developed and may not be stable. Please report any issues you encounter.
 
 This resolver is a plugin for Parcel that allows you to compile an imported default function into an IIFE (using [`esbuild`](https://esbuild.github.io/)) and wrap it in a function accepting variadic args, which forwards them to the original function when executed.
