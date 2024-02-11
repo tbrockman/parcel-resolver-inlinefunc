@@ -6,6 +6,8 @@ import { build, type BuildOptions } from 'esbuild'
 import { join } from "path"
 import type { InlinefuncResolverConfig, InlinefuncExtendedPackageJSON } from "./types";
 
+const prefix = 'inlinefunc:'
+
 export default new Resolver({
   async loadConfig({ config, options, logger }) {
     let conf = await config.getConfig([], {
@@ -24,15 +26,14 @@ export default new Resolver({
     })
     return { resolver, config: packageJSON["parcel-resolver-inlinefunc"] } as InlinefuncResolverConfig;
   },
-  async resolve({ specifier, dependency, options, config: { resolver, config } }) {
-    console.debug("parcel-resolver-inlinefunc")
-    const prefix = 'inlinefunc:'
+  async resolve({ specifier, dependency, options, logger, config: { resolver, config } }) {
+    logger.verbose({ message: "[parcel-resolver-inlinefunc]" })
 
     if (!specifier.startsWith(prefix)) {
       return null
     }
 
-    console.debug(`found matching specifier: ${specifier}`)
+    logger.verbose({ message: `found matching specifier: ${specifier}` })
     const without = specifier.slice(prefix.length)
     const result: ResolveResult = await resolver.resolve({
       filename: without,
@@ -46,7 +47,7 @@ export default new Resolver({
     });
 
     if (!result || !result.filePath) {
-      console.error(`failed to resolve: ${specifier}`)
+      logger.error({ message: `failed to resolve: ${specifier}` })
       return null
     }
 
@@ -54,17 +55,17 @@ export default new Resolver({
 
     try {
       if (config) {
-        console.debug(`inlinefunc configuration detected:\n${JSON.stringify(config, null, 2)}`)
+        logger.verbose({ message: `inlinefunc configuration detected:\n${JSON.stringify(config, null, 2)}` })
         const optionsFile = join('file://', options.projectRoot, config.options)
         const exported = await import(optionsFile)
         overrides = { ...exported }
-        console.debug(`loaded esbuild config overrides:\n${JSON.stringify(overrides, null, 2)}`)
+        logger.verbose({ message: `loaded esbuild config overrides:\n${JSON.stringify(overrides, null, 2)}` })
       }
     } catch (e) {
-      console.error('error with dynamic import', e)
+      logger.error({ message: `error with dynamic import:\n${e}` })
     }
 
-    console.debug(`reading code from resolved filepath: ${result.filePath}`)
+    logger.verbose({ message: `reading code from resolved filepath: ${result.filePath}` })
     const code = await options.inputFS.readFile(result.filePath, 'utf8')
 
     let out
@@ -84,24 +85,24 @@ export default new Resolver({
           js: 'module.exports = (...args) => {'
         },
         footer: {
-          js: 'await __plasmo_inlinefunc.default(...args); }'
+          js: 'return __parcel_resolver_inlinefunc.default(...args); }'
         },
-        globalName: '__plasmo_inlinefunc',
+        globalName: '__parcel_resolver_inlinefunc',
         preserveSymlinks: true,
         platform: 'browser',
         absWorkingDir: options.projectRoot,
         treeShaking: true,
         ...overrides
       } as BuildOptions
-      console.debug('starting esbuild with arguments:\n', args)
+      logger.verbose({ message: `starting esbuild with arguments: ${args}` })
       out = await build(args)
     } catch (e) {
-      console.error('error with esbuild:', e)
+      logger.error({ message: `error with esbuild: ${e}` })
       return null
     }
 
     if (!out || !out.outputFiles || out.outputFiles.length === 0) {
-      console.warn('esbuild failed to product any output files')
+      logger.warn({ message: 'esbuild failed to product any output files' })
       return null
     }
 

@@ -1,13 +1,20 @@
-// An example dependency we'd want bundled with our function
-import { getQuickJS } from "quickjs-emscripten" // put a VM in your VM
+import { newQuickJSWASMModule, newVariant } from 'quickjs-emscripten';
+import wasmModule from './src/quick-js-debug-sync.wasm'
+import wasmSourceMapData from './src/quick-js-debug-sync.wasm.map.txt'
 
 // IMPORTANT: function must be the default export
 export default async function main(extensionId: string) {
     console.log('executing content script fn')
 
-    const QuickJS = await getQuickJS()
+    const variant = newVariant(baseVariant, {
+        wasmModule,
+        wasmSourceMapData,
+    })
 
-    console.log('awaited QuickJS')
+    console.log('creating quickjs vm')
+    const QuickJS = await newQuickJSWASMModule(variant);
+
+    console.log('creating quickjs context')
     const vm = QuickJS.newContext()
 
     const world = vm.newString(extensionId)

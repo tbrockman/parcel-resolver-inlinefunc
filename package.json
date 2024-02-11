@@ -6,10 +6,11 @@
     "dist"
   ],
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prepublishOnly": "pnpm build",
     "build": "tsup src/index.ts --minify --clean --dts",
-    "build:examples": "pnpm -C examples/content-script build",
+    "build:examples": "pnpm -C examples/content-script-simple build",
     "dev": "tsup src/index.ts --watch"
   },
   "author": "Theodore Brockman <iam@theo.lol>",

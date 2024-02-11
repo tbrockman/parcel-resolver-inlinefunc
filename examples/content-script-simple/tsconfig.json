@@ -4,6 +4,9 @@
     "types": [
       "chrome"
     ],
+    "rootDirs": [
+      "./src"
+    ],
   },
   "include": [
     "src/*.ts"

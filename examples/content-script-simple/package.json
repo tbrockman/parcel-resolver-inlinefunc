@@ -1,5 +1,5 @@
 {
-  "name": "content-script-with-wasm",
+  "name": "content-script-simple",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -11,16 +11,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "quickjs-emscripten": "^0.27.0"
+    "lodash": "^4.17.21",
+    "parcel-resolver-inlinefunc": "link:..\\.."
   },
   "devDependencies": {
     "@parcel/config-default": "^2.11.0",
     "@types/chrome": "^0.0.260",
+    "@types/lodash": "^4.14.202",
     "esbuild-plugin-polyfill-node": "^0.3.0",
-    "parcel": "^2.11.0",
-    "parcel-resolver-inlinefunc": "link:..\\.."
-  },
-  "parcel-resolver-inlinefunc": {
-    "options": "inlinefunc.config.mjs"
+    "parcel": "^2.11.0"
   }
 }

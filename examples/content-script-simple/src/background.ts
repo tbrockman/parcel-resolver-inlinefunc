@@ -1,4 +1,4 @@
-import contentScript from 'inlinefunc:./sqlite';
+import contentScript from 'inlinefunc:./content-script';
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
