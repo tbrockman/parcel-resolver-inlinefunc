@@ -92,6 +92,7 @@ export default new Resolver({
         platform: 'browser',
         absWorkingDir: options.projectRoot,
         treeShaking: true,
+        minify: true,
         ...overrides
       } as BuildOptions
       logger.verbose({ message: `starting esbuild with arguments: ${args}` })
