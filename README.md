@@ -78,6 +78,7 @@ You can then use this file by referencing it in your `package.json`:
 {
   "name": "my-package",
   "version": "1.0.0",
+  ...
   "devDependencies": {
     "parcel-resolver-inlinefunc": "^1.0.0"
   },
