@@ -1,6 +1,6 @@
 {
   "name": "parcel-resolver-inlinefunc",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Parcel resolver for compiling and inlining functions as IIFEs, which can be serialized and executed in different contexts",
   "files": [
     "dist"

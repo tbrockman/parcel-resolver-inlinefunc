@@ -58,7 +58,7 @@ export default new Resolver({
         logger.verbose({ message: `inlinefunc configuration detected:\n${JSON.stringify(config, null, 2)}` })
         const optionsFile = join('file://', options.projectRoot, config.options)
         const exported = await import(optionsFile)
-        overrides = { ...exported }
+        overrides = { ...exported.default }
         logger.verbose({ message: `loaded esbuild config overrides:\n${JSON.stringify(overrides, null, 2)}` })
       }
     } catch (e) {
@@ -88,14 +88,14 @@ export default new Resolver({
           js: 'return __parcel_resolver_inlinefunc.default(...args); }'
         },
         globalName: '__parcel_resolver_inlinefunc',
-        preserveSymlinks: true,
+        preserveSymlinks: false,
         platform: 'browser',
         absWorkingDir: options.projectRoot,
         treeShaking: true,
         minify: true,
         ...overrides
       } as BuildOptions
-      logger.verbose({ message: `starting esbuild with arguments: ${args}` })
+      logger.verbose({ message: `starting esbuild with arguments: ${JSON.stringify(args, null, 2)}` })
       out = await build(args)
     } catch (e) {
       logger.error({ message: `error with esbuild: ${e}` })

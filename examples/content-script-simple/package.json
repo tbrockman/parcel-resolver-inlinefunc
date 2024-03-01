@@ -18,7 +18,9 @@
     "@parcel/config-default": "^2.11.0",
     "@types/chrome": "^0.0.260",
     "@types/lodash": "^4.14.202",
-    "esbuild-plugin-polyfill-node": "^0.3.0",
     "parcel": "^2.11.0"
+  },
+  "parcel-resolver-inlinefunc": {
+    "options": "inlinefunc.config.mjs"
   }
 }

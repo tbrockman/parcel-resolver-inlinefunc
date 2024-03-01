@@ -5,7 +5,7 @@
 
 This resolver is a plugin for Parcel that allows you to compile an imported default function into an IIFE (using [`esbuild`](https://esbuild.github.io/)) and wrap it in a function accepting variadic args, which forwards them to the original function when executed.
 
-This allows you to create a serializable function (bundling all necessary dependencies within itself) that can be executed in a different context, such as a Chrome content script.
+This allows you to create a serializable function (bundling all necessary dependencies within itself) that can be deserialized and executed in a different context, such as a Chrome content script, a web worker, or a Javascript VM.
 
 You can see a real example of this being used in [opentelemetry-browser-extension](https://github.com/tbrockman/opentelemetry-browser-extension).
 
@@ -56,7 +56,22 @@ export default async function main(extensionId: string) {
 
 ## Customization
 
-If you'd like to pass anything else to `esbuild` (see the [default parameters here](./src/index.ts#L73)), for example if your function requires any polyfills, you can do so by creating an `inlinefunc.config.mjs` file (or whatever you'd like to name it) which exports the top-level configuration options you'd like to override:
+If you'd like to pass anything else to `esbuild` (see the [default parameters here](./src/index.ts#L73)), for example if your function requires any polyfills, you can do so by creating an `inlinefunc.config.mjs` file (or whatever you'd like to name it) which exports a default object of the top-level configuration options you'd like to override:
+
+`inlinefunc.config.mjs`
+```javascript
+import { polyfillNode } from "esbuild-plugin-polyfill-node";
+
+export default {
+    plugins: [
+        polyfillNode({
+            path: true,
+        })
+    ]
+};
+```
+
+You can then use this file by referencing it in your `package.json`:
 
 `package.json`
 ```json
@@ -64,7 +79,7 @@ If you'd like to pass anything else to `esbuild` (see the [default parameters he
   "name": "my-package",
   "version": "1.0.0",
   "devDependencies": {
-    "parcel-resolver-inlinefunc": "^0.0.1"
+    "parcel-resolver-inlinefunc": "^1.0.0"
   },
   "parcel-resolver-inlinefunc": {
     "options": "inlinefunc.config.mjs"
@@ -72,30 +87,7 @@ If you'd like to pass anything else to `esbuild` (see the [default parameters he
 }
 ```
 
-`inlinefunc.config.mjs`
-```javascript
-import { polyfillNode } from "esbuild-plugin-polyfill-node";
-
-const plugins = [
-    polyfillNode({
-        path: true,
-    })
-];
-
-export {
-    plugins
-};
-```
-
 ## Known issues
-
-### `✘ [ERROR] Could not resolve "*"`
-
-If you're using `pnpm` for your project and see this error, this can potentially be resolved by running the following:
-
-```bash
-pnpm install --shamefully-hoist
-```
 
 ### `Uncaught TypeError: Failed to construct 'URL': Invalid URL`
 
