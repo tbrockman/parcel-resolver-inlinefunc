@@ -4,7 +4,7 @@ A Parcel resolver that allows you to compile an imported default function into a
 
 This allows you to create a serializable function (bundling all necessary dependencies within itself) that can be deserialized and executed in a different context, such as a Chrome content script, a web worker, or a Javascript VM.
 
-You can see a real example of this being used in [opentelemetry-browser-extension](https://github.com/tbrockman/opentelemetry-browser-extension).
+You can see a real example of this being used in [browser-extension-for-opentelemetry](https://github.com/tbrockman/browser-extension-for-opentelemetry).
 
 ## Installation
 
